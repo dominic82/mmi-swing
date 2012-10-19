@@ -53,6 +53,7 @@ public class Plotter extends JFrame implements ActionListener {
         this.tabbedPane.add(title, panel);
     }
     
+    @Override
     public void actionPerformed(ActionEvent ae) {
 //        this.dispose();
     }
