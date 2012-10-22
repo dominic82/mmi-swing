@@ -43,19 +43,14 @@ public class Plotter extends JFrame implements ActionListener {
         setDefaultCloseOperation(EXIT_ON_CLOSE);
         setVisible(true);
     }
-    
-    public void setupInfoDialog() {
-        JLabel infoText = new JLabel("Mein Info Text");
-        JOptionPane infoDialog = new JOptionPane(infoText);
-    }
-    
+   
     public void addTab(String title, JPanel panel) {
         this.tabbedPane.add(title, panel);
     }
     
     @Override
     public void actionPerformed(ActionEvent ae) {
-//        this.dispose();
+        this.dispose();
     }
     
     public static void main(String[] args) {
