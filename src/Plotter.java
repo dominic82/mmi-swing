@@ -24,11 +24,24 @@ public class Plotter extends JFrame
         menuBar = new JMenuBar();
         plotterMenu = new JMenu("Plotter");
         plotterMenuInfoItem = new JMenuItem("Info");
-        plotterMenuInfoItem.addActionListener(this); // this.actionPerformed() aufrufen
+
+
+	// ********************
+	// Uebungsblatt 0
+	// Eventhandler this.actionPerformed() aufrufen
+        plotterMenuInfoItem.addActionListener(this);
+	// ********************
+
         plotterMenu.add(plotterMenuInfoItem);
 
         plotterMenuExitItem = new JMenuItem("Exit");
-        plotterMenuExitItem.addActionListener(this); // hier auch
+
+	// ********************
+	// Uebungsblatt 0
+	// Eventhandler this.actionPerformed() aufrufen
+        plotterMenuExitItem.addActionListener(this);
+	// ********************
+
         plotterMenu.add(plotterMenuExitItem);
         menuBar.add(plotterMenu);
         this.setJMenuBar(menuBar);
@@ -51,7 +64,11 @@ public class Plotter extends JFrame
     public static void main(String[] args) {
         Plotter plotter = new Plotter();
         plotter.addTab("Image Loader", new ImageLoader());
+
+	// ********************
+	// Einbeziehung der Klassen von Uebungsblatt 1
         plotter.addTab("Function Plotter", new FunctionPlotter());
+	// ********************
     }
 
     @Override
@@ -60,11 +77,22 @@ public class Plotter extends JFrame
         String menuItemText = menuItem.getText();
 
         if (menuItemText.equals("Exit")) {
-            this.dispose(); // Fenster schliessen
+
+	    // ********************
+	    // Uebungsblatt 0
+	    // Fenster schliessen
+            this.dispose();
+	    // ********************
+
         }
         if (menuItemText.equals("Info")) {
+
+	    // ********************
+	    // Uebungsblatt 0
             // Info-Fenster anzeigen
             JOptionPane.showMessageDialog(this, "Dies ist ein kurzer Info-Text.\nVielen Dank.");
+	    // ********************
+
         }
     }
 }

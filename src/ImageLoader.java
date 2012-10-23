@@ -24,17 +24,31 @@ public class ImageLoader extends JPanel
 		this.add(controlPanel, BorderLayout.EAST);	
 	}
 
+    
+    // ********************
+    // Uebungsblatt 0
+    // laedt eine Datei eines gegebenen Dateinames als Icon
+    // ********************
 	public void loadImage(String fileName) {
 		ImageIcon loadedImage = new ImageIcon(fileName);
 		JLabel imageLabel = new JLabel(loadedImage);
 		JScrollPane scrollPane = new JScrollPane(imageLabel);
 		this.add(scrollPane);
+		// vielleicht nicht die korrekte Methode;
+		// hier verhindert sie, dass man nochmal auf den Tab
+		// klicken muss um das Icon zu sehen
 		scrollPane.doLayout();
 		this.doLayout();
 	}
+    // ********************
+
 
 	@Override
 	public void actionPerformed(ActionEvent arg0) {
+	    // ********************
+	    // Uebungsblatt 0
+	    // JFileChooser -> loadImage()
+	    // ********************
 		final JFileChooser fileChooser = new JFileChooser();
 		fileChooser.addChoosableFileFilter(new ImageFilter());
 		fileChooser.setAcceptAllFileFilterUsed(false);
@@ -42,15 +56,22 @@ public class ImageLoader extends JPanel
 		if(fileChooserReturnValue == JFileChooser.APPROVE_OPTION) {
 			loadImage(fileChooser.getSelectedFile().getAbsolutePath());
 		}
+		// ********************
 	}
 }
 
+
+// ********************
+// Uebungsblatt 0
 // diese Klasse filtert JPEGs und GIFs aus aufgrund von Dateinamen-Erweiterungen
+// ********************
 class ImageFilter extends javax.swing.filechooser.FileFilter {
 
 	@Override
 	public boolean accept(File file) {
+
 		if(file.isDirectory()) { return true; }
+
 		String fileName = file.getName();
 		int lastDot = fileName.lastIndexOf('.');
 		if(lastDot < 1 || lastDot > fileName.length() - 4) { // mindestens einbuchstabiger Name und dreibuchstabige Extension
