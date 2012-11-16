@@ -138,9 +138,89 @@ public class PolygonPanel extends JPanel implements MouseListener {
 		//
 		// Berechnen Sie an dieser Stelle fuer die Aufgabe 4.4 a) die Parameter s und t, entsprechend der Aufgabenstellung.
 		//
+		// ********************
+		// Aufgabe 4.4.a
+		double a1x = a1.getX(); double a1y = a1.getY();
+		double a2x = a2.getX(); double a2y = a2.getY();
+		double b1x = b1.getX(); double b1y = a1.getY();
+		double b2x = b2.getX(); double b2y = a2.getY();
 
+		// lineare Gleichungssysteme aufgelöst nach s und t
+		try {
+			s = (((a1x-a2x)/(b1x-a1x))-((a1y-a2y)/(b1y-a1y)))
+				/
+				(((b2x-a2x)/(b1x-a1x))-((b2y-a2y)/(b1y-a1y)));
+		}
+		catch (ArithmeticException e) { s = Double.NaN; }
+		try {
+			t = (((a1x-a2x)/(b2x-a2x))-((a1y-a2y)/(b2y-a2y)))
+				/
+				(((b1y-a1y)/(b2y-a2y))-((b1x-a1x)/(b2x-a2x)));
+		}
+		catch (ArithmeticException e) { t = Double.NaN; }
+		
+		// Berechnung hat ein Ergebnis geliefert
+		if(s != Double.NaN && t != Double.NaN) {
+			return new Point2D.Double(t, s);
+		}
+
+		// Sonderfallbehandlung
+		// keine Loesung
+		if(s == Double.NaN && t == Double.NaN) {
+			// wenn's denn unendlich sein soll ...
+			return new Point2D.Double(Double.POSITIVE_INFINITY, Double.POSITIVE_INFINITY);
+		}
+
+		// hier angekommen hat s oder t einen Wert;
+		// Hilfsfunktionen sind direkt im Anschluss
+		// an diese Funktion definiert
+		if(s != Double.NaN) {
+			Point2D.Double p = pointOnSegment(a2, b2, s);
+			if(closeEnough(p, a1)) { t = 0.0; }
+			else {
+				if(closeEnough(p, b1)) { t = 1.0; }
+				else { t = Double.POSITIVE_INFINITY; }
+			}
+		}
+		else { // t != Double.NaN
+			Point2D.Double p = pointOnSegment(a1, b1, t);
+			if(closeEnough(p, a2)) { s = 0.0; }
+			else {
+				if(closeEnough(p, b2)) { s = 1.0; }
+				else { s = Double.POSITIVE_INFINITY; }
+			}			
+		}
 		return new Point2D.Double(t, s);
 	}
+
+	
+	// rechnet a + (b - a)s aus, wobei a, b Vektoren sind
+	// und 0 <= s <= 1
+	private Point2D.Double pointOnSegment(Point2D.Double a,
+										  Point2D.Double b,
+										  Double s) {
+		Double x, y;
+		x = a.getX() + (b.getX() - a.getX()) * s;
+		y = a.getY() + (b.getY() - a.getY()) * s;
+		return new Point2D.Double(x, y);
+	}
+	
+	
+	// testet ob 2 Punkte so nah beieinander liegen, dass
+	// sie bzgl. Rundungsfehlern eigentlich identisch sind
+	private Boolean closeEnough(Point2D.Double p1,
+								Point2D.Double p2) {
+		Double fuzziness = 0.0000001;
+		Double dx = p2.getX() - p1.getX();
+		Double dy = p2.getY() - p1.getY();
+		return(Math.sqrt(dx*dx + dy*dy) < fuzziness);
+	}
+	
+	
+	// ********************
+	// Ende Aufgabe 4.4.a
+	// ********************
+
 	
 	/**
 	 * Berechnet fuer einen gegebenen Punkt, ob dieser innerhalb oder ausserhalb des Polygons liegt.
@@ -152,9 +232,46 @@ public class PolygonPanel extends JPanel implements MouseListener {
 		// Berechnen Sie an dieser Stelle fuer die Aufgabe 4.4 b) entsprechend der Aufgabenstellung,
 		// ob der gegebene Punkt sich innerhalb des Polygons befindet.
 		//
+		// ********************
+		// Aufgabe 4.4.b
+		// lege einen Strahl von p zu einem Punkt weit
+		// jenseits des Polygons, zaehle wie oft dieser
+		// Strahl die Kanten des Polygons schneidet
+		// (bequemerweise mit der in Aufgabe 4.4.a
+		// implementierten Funktion und Strahl parallel
+		// der x-Achse)
+		// ungerade Anzahl der Schnitte: Punkt liegt im
+		// Polygon, sonst ausserhalb
+		int countIntersections = 0;
+		final Double largeValue = Double.MAX_VALUE / 4.0;
+		Point2D.Double coefficients;
+		Point2D.Double rayEndpoint = new Point2D.Double(largeValue, p.getY());
+		for(int i = 0; i < polygon.length - 1; i++) {
+			coefficients = intersectLineLine(polygon[i],
+											 polygon[i+1],
+											 p,
+											 rayEndpoint);
+			if(coefficients.getX() != Double.POSITIVE_INFINITY) {
+				countIntersections++;
+			}
+		}
+		coefficients = intersectLineLine(polygon[polygon.length-1],
+										  polygon[0],
+										  p,
+										  rayEndpoint);
+		if(coefficients.getX() != Double.POSITIVE_INFINITY) {
+			countIntersections++;
+		}
 
-		return true;	// das soll natuerlich geaendert werden!
+		// countIntersections is gerade wenn
+		// countIntersections mod 2 == 1
+		return(countIntersections % 2 == 1);
 	}
+	// ********************
+	// Ende Aufgabe 4.4.b
+	// ********************
+
+	
 	
 	/**
 	 * Berechnet die Determinante der Matrix:
