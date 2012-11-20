@@ -59,6 +59,10 @@ public class OpenGLFrame extends JFrame implements GLEventListener, MouseMotionL
 		// Clear screen and render objects
 		gl.glClear(GL.GL_COLOR_BUFFER_BIT | GL.GL_DEPTH_BUFFER_BIT);
 		gl.glColor3d(0.0, 0.5, 0.5);
+		// ********************
+		// Aufgabe 5.4.b
+		// smooth shading einschalten
+		gl.glShadeModel(GL.GL_SMOOTH);
 		glut.glutSolidTeapot(1.0);
 
 
