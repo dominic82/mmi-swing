@@ -73,6 +73,30 @@ public class OpenGLFrame extends JFrame implements GLEventListener, MouseMotionL
 		gl.glTranslated(3.0, 0.0, 0.0); // passt in etwa zur Vorlage
 		glut.glutSolidIcosahedron();
 		
+		// ********************
+		// Aufgabe 5.4.c
+		// "Fuer den Farbverlauf soll die Beleuchtung deaktiviert werden."
+		// so wird's gemacht:
+		//gl.glDisable(GL.GL_LIGHTING);
+		// Ist hier aber auskommentiert, da sonst das Licht
+		// auch fuer die anderen Aufgaben ausgeht.
+
+		// Konstanten (xFactor groesser fuer breiteren Streifen)
+		final float red[] = {0.0f, 0.0f, 0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f};
+		final float green[] = {0.0f, 0.0f, 1.0f, 1.0f, 1.0f, 1.0f, 0.0f, 0.0f};
+		final float blue[] = {0.0f, 1.0f, 1.0f, 0.0f, 0.0f, 1.0f, 1.0f, 0.0f};
+		final double xFactor = 6.0 / 7.0;
+		// ungefaehre Lage nach Vorlage
+		gl.glTranslated(-5.0, -2.0, 0.0);
+		// Farbverlauf aus 5.3.a
+		gl.glBegin(GL.GL_QUAD_STRIP); {
+			for(int i = 0; i < 8; i++) {
+				double x = -1.0 + xFactor * (double)i;
+				gl.glColor3f(red[i], green[i], blue[i]);
+				gl.glVertex3d(x, -1.0, 0.0);
+				gl.glVertex3d(x, 1.0, 0.0);
+			}
+		} gl.glEnd();
 	}
 
 	public void displayChanged(GLAutoDrawable drawable, boolean arg1, boolean arg2) { }
